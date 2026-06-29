@@ -1,0 +1,8 @@
+[package]
+name = "rust-retro-arcade"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+macroquad = "0.4"
+quad-storage = "0.1"
