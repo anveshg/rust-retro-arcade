@@ -66,7 +66,10 @@ impl Screen for Menu {
             draw_text(&item_text, 220.0, y, 32.0, color);
         }
         let s = self.ctx.borrow().scores;
-        let scores_text = format!("Best Pac-Man: {}    Pong wins: {}", s.best_pacman, s.pong_wins);
+        let scores_text = format!(
+            "Best Pac-Man: {}    Pong wins: {}",
+            s.best_pacman, s.pong_wins
+        );
         draw_text(&scores_text, 120.0, 440.0, 22.0, theme::TEXT);
     }
 
