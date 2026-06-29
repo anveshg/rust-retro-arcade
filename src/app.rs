@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::input::Input;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -21,6 +19,7 @@ pub enum Transition {
 pub trait Screen {
     fn update(&mut self, input: &Input, dt: f32) -> Option<Transition>;
     fn draw(&self);
+    #[allow(dead_code)] // exercised by unit tests
     fn id(&self) -> ScreenId;
 }
 
@@ -40,6 +39,7 @@ impl<F: Fn(ScreenId) -> Box<dyn Screen>> App<F> {
         }
     }
 
+    #[allow(dead_code)] // exercised by unit tests
     pub fn current_id(&self) -> ScreenId {
         self.current.id()
     }

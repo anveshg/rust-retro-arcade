@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use crate::pong::ball::Ball;
 
 pub struct Paddle {

@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use macroquad::audio::{load_sound_from_bytes, play_sound_once, Sound};
 
 const SAMPLE_RATE: u32 = 44_100;

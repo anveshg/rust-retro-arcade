@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::pacman::maze::Maze;
 
 pub struct Ghost {

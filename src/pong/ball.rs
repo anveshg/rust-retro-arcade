@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use macroquad::math::Vec2;
 
 pub struct Ball {

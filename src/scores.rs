@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct HighScores {
     pub best_pacman: u32,

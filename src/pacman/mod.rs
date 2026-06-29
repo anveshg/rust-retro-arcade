@@ -235,6 +235,9 @@ impl Screen for PacmanGame {
         draw_text(&lv_text, 420.0, 20.0, 24.0, theme::TEXT);
         let time_text = format!("Time {:.0}", self.elapsed);
         draw_text(&time_text, 520.0, 20.0, 24.0, theme::TEXT);
+        let eaten = self.maze.pellet_total - self.maze.pellets_remaining();
+        let pellet_text = format!("Dot {}/{}", eaten, self.maze.pellet_total);
+        draw_text(&pellet_text, 10.0, 44.0, 20.0, theme::TEXT);
     }
 
     fn id(&self) -> ScreenId {

@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use macroquad::prelude::*;
 
 #[derive(Default, Clone, Copy)]

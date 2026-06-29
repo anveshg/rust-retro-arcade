@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 /// 19 columns x 21 rows. '#' wall, '.' pellet, ' ' empty, 'P' player, 'G' ghost.
 pub const MAZE: &[&str] = &[
     "###################",
