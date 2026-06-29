@@ -1,14 +1,34 @@
+//! # `paddle` — Paddle state and collision helpers
+//!
+//! Defines the [`Paddle`] struct used for both the human-controlled and
+//! AI-controlled sides. Demonstrates `&self` read-only borrows, `&mut self`
+//! mutation, and passing a reference to another struct (`&Ball`) as an
+//! argument — all with no runtime overhead.
+
 use crate::pong::ball::Ball;
 
+/// A Pong paddle: a rectangle described by position, dimensions, and speed.
+///
+/// All fields are `pub` so the game loop in `mod.rs` can read them directly.
+/// Mutation goes through `&mut self` methods to keep physics logic in one
+/// place rather than scattered across the game loop.
 pub struct Paddle {
+    /// Left edge x-coordinate in screen pixels.
     pub x: f32,
+    /// Top edge y-coordinate in screen pixels.
     pub y: f32,
+    /// Width in pixels.
     pub w: f32,
+    /// Height in pixels.
     pub h: f32,
+    /// Maximum movement speed in pixels/second.
     pub speed: f32,
 }
 
 impl Paddle {
+    /// Create a paddle at `(x, y)` with default size (12 × 80 px) and
+    /// speed 320 px/s. Width, height, and speed are fixed constants here;
+    /// only position varies between the two sides.
     pub fn new(x: f32, y: f32) -> Self {
         Paddle {
             x,
@@ -19,10 +39,20 @@ impl Paddle {
         }
     }
 
+    /// Y-coordinate of the paddle's centre.
+    ///
+    /// Takes `&self` (read-only borrow) — computing a midpoint does not need
+    /// to write any field. A `&self` method can be called even when only a
+    /// shared reference to the paddle is available.
     pub fn center_y(&self) -> f32 {
         self.y + self.h / 2.0
     }
 
+    /// Shift the paddle by `dy` pixels, clamped so it stays in
+    /// `[top, bottom - self.h]`.
+    ///
+    /// Uses `&mut self` because it writes `self.y`. `.clamp()` enforces the
+    /// boundary in a single expression — no `if`/`else` branches needed.
     pub fn move_by(&mut self, dy: f32, top: f32, bottom: f32) {
         self.y = (self.y + dy).clamp(top, bottom - self.h);
     }
@@ -35,6 +65,12 @@ impl Paddle {
         self.y = (self.y + step).clamp(top, bottom - self.h);
     }
 
+    /// Return `true` if the ball overlaps the paddle rectangle.
+    ///
+    /// **Borrowing another struct:** `ball: &Ball` is a shared borrow of the
+    /// ball. Both `self` (`&Paddle`) and `ball` (`&Ball`) are live shared
+    /// borrows at the same time, which Rust allows because neither is `&mut`
+    /// — multiple read-only borrows of *different* values are always legal.
     pub fn hits(&self, ball: &Ball) -> bool {
         ball.pos.x - ball.radius <= self.x + self.w
             && ball.pos.x + ball.radius >= self.x
@@ -48,6 +84,11 @@ impl Paddle {
     }
 }
 
+/// Unit tests for paddle movement and collision detection.
+///
+/// `Ball::new` is available inside this block via `use super::*;`, which
+/// re-exports the `Ball` import at the top of this file. Cross-module
+/// fixtures work with no extra ceremony in Rust's test harness.
 #[cfg(test)]
 mod tests {
     use super::*;
