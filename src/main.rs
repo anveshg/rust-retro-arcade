@@ -1,5 +1,7 @@
 use macroquad::prelude::*;
 
+mod theme;
+
 fn window_conf() -> Conf {
     Conf {
         window_title: "rust-retro-arcade".to_owned(),
