@@ -1,5 +1,6 @@
 use macroquad::prelude::*;
 
+mod app;
 mod input;
 mod theme;
 
