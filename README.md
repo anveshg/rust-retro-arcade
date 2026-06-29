@@ -1,5 +1,7 @@
 # rust-retro-arcade
 
+**▶ Play it in your browser: https://anveshg.github.io/rust-retro-arcade/**
+
 A web-first retro arcade written in Rust — a modern, sole-authored rewrite of an
 old DOS Turbo C++ project (Pac-Man + Pong with a menu, instructions, and credits
 screens).
