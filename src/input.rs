@@ -15,6 +15,8 @@ pub struct Input {
     pub escape: bool,
     pub digit: Option<u8>,
     pub any_pressed: bool,
+    pub up_pressed: bool,
+    pub down_pressed: bool,
 }
 
 impl Input {
@@ -44,6 +46,8 @@ impl Input {
             escape: is_key_pressed(KeyCode::Escape),
             digit,
             any_pressed: get_last_key_pressed().is_some(),
+            up_pressed: is_key_pressed(KeyCode::Up) || is_key_pressed(KeyCode::W),
+            down_pressed: is_key_pressed(KeyCode::Down) || is_key_pressed(KeyCode::S),
         }
     }
 

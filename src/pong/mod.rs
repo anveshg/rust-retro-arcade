@@ -164,6 +164,8 @@ impl Screen for PongGame {
                 score: self.score_l.max(self.score_r),
                 subtitle: format!("{} - {}", self.score_l, self.score_r),
             });
+            let snapshot = self.ctx.borrow().scores;
+            crate::scores::save(&snapshot);
             return Some(Transition::Goto(ScreenId::GameOver));
         }
 

@@ -30,10 +30,10 @@ impl Menu {
 
 impl Screen for Menu {
     fn update(&mut self, input: &Input, _dt: f32) -> Option<Transition> {
-        if input.up || input.w {
+        if input.up_pressed {
             self.selected = (self.selected + ITEMS.len() - 1) % ITEMS.len();
         }
-        if input.down || input.s {
+        if input.down_pressed {
             self.selected = (self.selected + 1) % ITEMS.len();
         }
         if let Some(d) = input.digit {

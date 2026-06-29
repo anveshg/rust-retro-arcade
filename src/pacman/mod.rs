@@ -107,6 +107,8 @@ impl PacmanGame {
                     String::new()
                 },
             });
+            let snapshot = self.ctx.borrow().scores;
+            crate::scores::save(&snapshot);
             return Some(Transition::Goto(ScreenId::GameOver));
         }
         self.reset_positions();
@@ -146,8 +148,16 @@ impl Screen for PacmanGame {
         // Ghosts step slightly slower than the player.
         if self.ghost_timer >= interval * 1.15 {
             self.ghost_timer -= interval * 1.15;
-            let target = (self.player.col, self.player.row);
-            for g in &mut self.ghosts {
+            let player_tile = (self.player.col, self.player.row);
+            for (i, g) in self.ghosts.iter_mut().enumerate() {
+                let target = if i == 0 {
+                    player_tile
+                } else {
+                    (
+                        player_tile.0 + 2 * self.player.dir.0,
+                        player_tile.1 + 2 * self.player.dir.1,
+                    )
+                };
                 g.step(&self.maze, target);
             }
         }
@@ -178,6 +188,8 @@ impl Screen for PacmanGame {
                     format!("Time bonus {}", bonus)
                 },
             });
+            let snapshot = self.ctx.borrow().scores;
+            crate::scores::save(&snapshot);
             return Some(Transition::Goto(ScreenId::GameOver));
         }
 
