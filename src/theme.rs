@@ -1,5 +1,9 @@
 use macroquad::prelude::Color;
 
+/// Fixed virtual canvas the whole game draws into; scaled to the real window.
+pub const VIRTUAL_W: f32 = 640.0;
+pub const VIRTUAL_H: f32 = 480.0;
+
 pub const BG: Color = Color {
     r: 0.04,
     g: 0.04,

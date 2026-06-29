@@ -6,4 +6,3 @@ rust-version = "1.82"
 
 [dependencies]
 macroquad = "0.4"
-quad-storage = "0.1"

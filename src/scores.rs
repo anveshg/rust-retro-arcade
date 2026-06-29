@@ -20,26 +20,69 @@ impl HighScores {
     }
 }
 
+/// Load persisted high scores (or defaults). Never panics.
 pub fn load() -> HighScores {
-    let storage = quad_storage::STORAGE.lock().unwrap();
-    let best_pacman = storage
-        .get("best_pacman")
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0);
-    let pong_wins = storage
-        .get("pong_wins")
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(0);
-    HighScores {
-        best_pacman,
-        pong_wins,
+    persist::load()
+}
+
+/// Persist high scores. Best-effort: failures degrade silently.
+pub fn save(h: &HighScores) {
+    persist::save(h);
+}
+
+// Native: a small text file in the working directory.
+#[cfg(not(target_arch = "wasm32"))]
+mod persist {
+    use super::HighScores;
+    use std::fs;
+
+    const FILE: &str = "highscores.txt";
+
+    pub fn load() -> HighScores {
+        let mut h = HighScores::default();
+        if let Ok(contents) = fs::read_to_string(FILE) {
+            let mut nums = contents.split_whitespace();
+            if let Some(v) = nums.next().and_then(|x| x.parse().ok()) {
+                h.best_pacman = v;
+            }
+            if let Some(v) = nums.next().and_then(|x| x.parse().ok()) {
+                h.pong_wins = v;
+            }
+        }
+        h
+    }
+
+    pub fn save(h: &HighScores) {
+        let _ = fs::write(FILE, format!("{} {}", h.best_pacman, h.pong_wins));
     }
 }
 
-pub fn save(h: &HighScores) {
-    let mut storage = quad_storage::STORAGE.lock().unwrap();
-    storage.set("best_pacman", &h.best_pacman.to_string());
-    storage.set("pong_wins", &h.pong_wins.to_string());
+// Web: browser localStorage via a tiny integer-only JS plugin (see index.html).
+// Passing only u32s avoids the fragile string FFI / sapp_jsutils version coupling.
+#[cfg(target_arch = "wasm32")]
+mod persist {
+    use super::HighScores;
+
+    extern "C" {
+        fn hs_load_pacman() -> u32;
+        fn hs_load_pong() -> u32;
+        fn hs_save(pacman: u32, pong: u32);
+    }
+
+    pub fn load() -> HighScores {
+        // SAFETY: provided by the `highscores` JS plugin registered in index.html.
+        unsafe {
+            HighScores {
+                best_pacman: hs_load_pacman(),
+                pong_wins: hs_load_pong(),
+            }
+        }
+    }
+
+    pub fn save(h: &HighScores) {
+        // SAFETY: see `load`.
+        unsafe { hs_save(h.best_pacman, h.pong_wins) }
+    }
 }
 
 #[cfg(test)]

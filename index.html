@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <title>rust-retro-arcade</title>
+  <link rel="icon" href="data:," />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     html, body { margin: 0; height: 100%; background: #07070f; }
     body { display: flex; align-items: center; justify-content: center; }
@@ -17,9 +19,30 @@
 </head>
 <body>
   <canvas id="glcanvas" width="640" height="480" tabindex="1"></canvas>
-  <script src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
-  <script src="https://not-fl3.github.io/miniquad-samples/quad-storage.js"></script>
+  <!-- macroquad/miniquad JS glue, vendored locally so the bundle is self-contained (no CDN). -->
+  <script src="js/mq_js_bundle.js"></script>
   <script>
+    // High-score persistence plugin: integer-only localStorage access. Deliberately
+    // avoids sapp_jsutils string marshalling (which is version-coupled to macroquad).
+    // localStorage access is wrapped so blocked storage (private mode) degrades to no-op.
+    miniquad_add_plugin({
+      register_plugin: function (importObject) {
+        importObject.env.hs_load_pacman = function () {
+          try { return (parseInt(localStorage.getItem("best_pacman")) || 0) >>> 0; } catch (e) { return 0; }
+        };
+        importObject.env.hs_load_pong = function () {
+          try { return (parseInt(localStorage.getItem("pong_wins")) || 0) >>> 0; } catch (e) { return 0; }
+        };
+        importObject.env.hs_save = function (pacman, pong) {
+          try {
+            localStorage.setItem("best_pacman", pacman >>> 0);
+            localStorage.setItem("pong_wins", pong >>> 0);
+          } catch (e) { /* storage unavailable: ignore */ }
+        };
+      },
+      name: "highscores",
+      version: 1,
+    });
     load("rust-retro-arcade.wasm");
   </script>
 </body>

@@ -44,21 +44,24 @@ pub enum Sfx {
     Select,
 }
 
+#[derive(Default)]
 pub struct Audio {
-    chomp: Sound,
-    bounce: Sound,
-    score: Sound,
-    death: Sound,
-    win: Sound,
-    select: Sound,
+    chomp: Option<Sound>,
+    bounce: Option<Sound>,
+    score: Option<Sound>,
+    death: Option<Sound>,
+    win: Option<Sound>,
+    select: Option<Sound>,
 }
 
 impl Audio {
     pub async fn load() -> Self {
-        async fn beep(freq: f32, ms: u32) -> Sound {
+        // Decode the generated WAVs; on any failure that effect is simply silent
+        // (the game still runs). The WAV is self-generated so this is belt-and-braces.
+        async fn beep(freq: f32, ms: u32) -> Option<Sound> {
             load_sound_from_bytes(&square_wave_wav(freq, ms, 0.3))
                 .await
-                .expect("generated WAV must decode")
+                .ok()
         }
         Audio {
             chomp: beep(660.0, 40).await,
@@ -79,7 +82,9 @@ impl Audio {
             Sfx::Win => &self.win,
             Sfx::Select => &self.select,
         };
-        play_sound_once(snd);
+        if let Some(snd) = snd {
+            play_sound_once(snd);
+        }
     }
 }
 
