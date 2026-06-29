@@ -2,6 +2,7 @@ use macroquad::prelude::*;
 
 mod app;
 mod input;
+mod scores;
 mod theme;
 
 fn window_conf() -> Conf {
