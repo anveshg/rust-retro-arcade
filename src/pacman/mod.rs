@@ -1,4 +1,5 @@
 pub mod maze;
+pub mod player;
 
 use crate::app::{Screen, ScreenId, Transition};
 use crate::input::Input;
