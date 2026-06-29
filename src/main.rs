@@ -1,5 +1,6 @@
 use macroquad::prelude::*;
 
+mod input;
 mod theme;
 
 fn window_conf() -> Conf {
