@@ -1,6 +1,7 @@
 use macroquad::prelude::*;
 
 mod app;
+mod audio;
 mod input;
 mod scores;
 mod theme;
