@@ -1,4 +1,5 @@
 pub mod ball;
+pub mod paddle;
 
 use crate::app::{Screen, ScreenId, Transition};
 use crate::input::Input;
