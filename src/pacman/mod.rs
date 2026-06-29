@@ -1,3 +1,5 @@
+pub mod maze;
+
 use crate::app::{Screen, ScreenId, Transition};
 use crate::input::Input;
 use crate::theme;
