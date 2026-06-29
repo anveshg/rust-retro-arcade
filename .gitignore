@@ -1,0 +1,10 @@
+# Rust
+/target
+**/*.rs.bk
+Cargo.lock.bak
+
+# Web build output
+/web/*.wasm
+
+# macOS
+.DS_Store
